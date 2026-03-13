@@ -2,11 +2,13 @@
 const prompt = require("prompt-sync")();
 const readline = require('readline-sync');
 const BD = require("./dataBase.js")
+const {Estudiantes} = require("./Estudiantes.js")
 let estudiantes = [];
+let BDEstudiantes= new Estudiantes("dataBase.json");
 let opcion = 0;
 BD.abrirBD();
 do {
-    console.clear();
+    //console.clear();
 
     console.log("-----Notas de II-IV----")
     console.log("1. Registar alumno")
@@ -28,7 +30,7 @@ do {
                 readline.keyInPause("No lo puede ingresa por que el alumno existe!");
                 break;
             }
-            BD.registarAlumno(cedula, nombre, apellido)
+            BDEstudiantes.resgitrarAlumno(cedula, nombre, apellido)
             readline.keyInPause("Estudiante registrado!")
             break;
         case '2':
@@ -115,5 +117,5 @@ do {
 
 
     }while (opcion != 6)
-
+BDEstudiantes.guardar()
 BD.cerrarBD();
