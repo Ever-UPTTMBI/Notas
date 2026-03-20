@@ -2,8 +2,8 @@
   "estudiantes": [
     {
       "ci": "1234",
-      "nombre": "evee",
-      "apellido": "frabxi",
+      "nombre": "Robreto",
+      "apellido": "zambrano",
       "notas": [
         "2",
         "3",
@@ -13,8 +13,8 @@
     },
     {
       "ci": "4321",
-      "nombre": "francoc",
-      "apellido": "jdjsjs",
+      "nombre": "enyerber",
+      "apellido": "franco",
       "notas": [
         "10",
         "20",

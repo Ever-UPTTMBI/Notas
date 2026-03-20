@@ -1,15 +1,28 @@
 
 const fs = require("fs");
 
-class Alumno {
+class persona{
     ci;
     nombre;
     apellido;
-    notas = [0, 0, 0, 0];
-    constructor(ci, nombre, apellido, notas = [0, 0, 0, 0]) {
+    constructor(ci, nombre, apellido) {
         this.ci = ci;
         this.nombre = nombre;
         this.apellido = apellido;
+    }
+    modificar(nombre,apellido){
+        this.nombre=nombre;
+        this.apellido=apellido;
+    }
+}
+class Profesor extends persona {
+  
+}
+class Alumno extends persona {
+  
+    notas = [0, 0, 0, 0];
+    constructor(ci, nombre, apellido, notas = [0, 0, 0, 0]) {
+        super(ci, nombre, apellido)
         this.notas = notas;
     }
 
@@ -23,16 +36,16 @@ class Alumno {
 }
 
 class Estudiantes {
-    Lista = [];
-    JsonName = "";
+    #Lista = [];
+    #JsonName = "";
 
     constructor(JsonName) {
-        this.JsonName = JsonName;
+        this.#JsonName = JsonName;
         if (fs.existsSync(JsonName)) {
             const dataBase = fs.readFileSync(JsonName, "utf8");
             const data = JSON.parse(dataBase).estudiantes;
             // Convertimos objetos planos en instancias de Alumno
-            this.Lista = data.map(a => new Alumno(a.ci, a.nombre, a.apellido, a.notas));
+            this.#Lista = data.map(a => new Alumno(a.ci, a.nombre, a.apellido, a.notas));
         } else {
             const dataBase = JSON.stringify({
                 estudiantes: []
@@ -43,7 +56,11 @@ class Estudiantes {
 
     registrarAlumno(ci, nombre, apellido) {
         const nuevoAlumno = new Alumno(ci, nombre, apellido);
-        this.Lista.push(nuevoAlumno);
+        this.#Lista.push(nuevoAlumno);
+        /*{
+            ci: ci,
+            nombre:nombre
+        }*/
     }
 
     registrarNota(ci, notas) {
@@ -53,30 +70,36 @@ class Estudiantes {
         }
     }
 
+    modificarAlumno(ci,nombre,apellido){
+         let alumno = this.buscarAlumno(ci);
+         alumno.modificar(nombre,apellido);
+
+    }
+
     buscarAlumno(ci) {
-        return this.Lista.find(alumno => alumno.ci == ci);
+        return this.#Lista.find(alumno => alumno.ci == ci);
     }
 
     todasLasNotas() {
-        return this.Lista;
+        return this.#Lista;
     }
 
     eliminarAlumno(ci) {
-        let i = this.Lista.findIndex(alumno => alumno.ci == ci);
+        let i = this.#Lista.findIndex(alumno => alumno.ci == ci);
         if (i !== -1) {
-            this.Lista.splice(i, 1);
+            this.#Lista.splice(i, 1);
         }
     }
 
     existeAlumno(ci) {
-        return this.Lista.some(alumno => alumno.ci == ci);
+        return this.#Lista.some(alumno => alumno.ci == ci);
     }
 
     guardar() {
         const dataBase = JSON.stringify({
-            estudiantes: this.Lista
+            estudiantes: this.#Lista
         }, null, 2);
-        fs.writeFileSync(this.JsonName, dataBase);
+        fs.writeFileSync(this.#JsonName, dataBase);
     }
 }
 

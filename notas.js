@@ -3,7 +3,6 @@ const readline = require('readline-sync');
 const {Estudiantes} = require("./Estudiantes.js")
 let BDEstudiantes= new Estudiantes("dataBase.json");
 let opcion = 0;
-
 do {
     //console.clear();
 
@@ -13,12 +12,15 @@ do {
     console.log("3. Ver notas de un alumno ")
     console.log("4. ver las notas de todos los alumnos ")
     console.log("5. Borrar un alumno")
-    console.log("6. salir")
+    console.log("6. editar alumno ")
+    console.log("7. salir")
     opcion = prompt("Ingrese su opcion ")
     let ci;
+    
     switch (opcion) {
         case '1':
-            console.clear();
+            
+            //console.clear();
             console.log("----registro de alumnos----")
             let nombre = prompt("Ingrese el nombre: ")
             let apellido = prompt("Ingrese el apellido: ");
@@ -87,8 +89,20 @@ do {
             }
             readline.keyInPause();
             break;
-
         case '6':
+            console.log("Modificar alumno")
+            let ci = prompt("Ingrese la cedula: ")
+            if(!BDEstudiantes.existeAlumno(ci)){
+                console.log("El alumno no existe...")
+                readline.keyInPause()
+                break;
+            }
+            let nombreNuevo = prompt("Ingrese nuevo nombre: ")
+            let apellidoNuevo= prompt("Ingrese apellido nuevo: ")
+            BDEstudiantes.modificarAlumno(ci,nombreNuevo,apellidoNuevo)
+            console.log("El alumno a sido modificado.. ")
+
+        case '7':
             readline.keyInPause("Presione una tecla para terminar")
             break;
         default:
@@ -100,5 +114,5 @@ do {
         console.clear()
 
 
-    }while (opcion != 6)
-BDEstudiantes.guardar()
+    }while (opcion != 7)
+BDEstudiantes.guardar()
