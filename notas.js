@@ -1,12 +1,11 @@
-//estudiantes v2
 const prompt = require("prompt-sync")();
 const readline = require('readline-sync');
-const BD = require("./dataBase.js")
-let estudiantes = [];
+const {Estudiantes} = require("./Estudiantes.js")
+let BDEstudiantes= new Estudiantes("dataBase.json");
 let opcion = 0;
-BD.abrirBD();
+
 do {
-    console.clear();
+    //console.clear();
 
     console.log("-----Notas de II-IV----")
     console.log("1. Registar alumno")
@@ -24,79 +23,66 @@ do {
             let nombre = prompt("Ingrese el nombre: ")
             let apellido = prompt("Ingrese el apellido: ");
             let cedula = prompt("Ingrese cedula: ")
-            if (BD.existeAlumno(ci)) {
+            if (BDEstudiantes.existeAlumno(cedula)) {
                 readline.keyInPause("No lo puede ingresa por que el alumno existe!");
                 break;
             }
-            BD.registarAlumno(cedula, nombre, apellido)
+            BDEstudiantes.registrarAlumno(cedula, nombre, apellido)
             readline.keyInPause("Estudiante registrado!")
             break;
         case '2':
             console.clear("----Registar nota----")
             ci = prompt("Ingrese la cedula del alumno ")
             let notas = [];
-             if (!BD.existeAlumno(ci)) {
+             if (!BDEstudiantes.existeAlumno(ci)) {
                 readline.keyInPause("Alumno no existe!");
                 break;
             }
-            let estudiante = BD.buscarAlumno(ci);
+            let estudiante = BDEstudiantes.buscarAlumno(ci);
            
             console.log("Nombre: ", estudiante.nombre)
             console.log("Apellido: ", estudiante.apellido)
             for (let i = 0; i < 4; i++) {
                 notas[i] = prompt("Ingrese lannota numero "+(i+1)+": ")
             }
-            BD.registrarNota(ci, notas);
+            BDEstudiantes.registrarNota(ci, notas);
             readline.keyInPause("Notas registradas!")
             break;
         case '3':
             console.clear("----Leer nota----");
             ci = prompt("Ingrese la cedula del alumno ")
-            if (!BD.existeAlumno(ci)) {
+            if (!BDEstudiantes.existeAlumno(ci)) {
                 readline.keyInPause("Alumno no existe!");
                 break;
             }
-            let alumno = BD.buscarAlumno(ci);
-            console.log("Nombre: ", alumno.nombre);
-            console.log("Apellido: ", alumno.apellido)
-            let sumatoria = 0
+            let alumno = BDEstudiantes.buscarAlumno(ci);
+            console.log(alumno.Informacion());
             for (let i = 0; i < 4; i++) {
-                sumatoria += Number(alumno.notas[i]);
-                console.log("Nota ", i+1, ": ", alumno.notas[i])
+                console.log("Nota ", i + 1, ": ", alumno.notas[i])
             }
-            console.log("Nota Final: ", sumatoria)
             readline.keyInPause("ok!")
             break;
         case '4':
             console.log("----notas -----")
-            let alumnos = BD.todasLasNotas();
+            let alumnos = BDEstudiantes.todasLasNotas();
             for (let alumno of alumnos) {
-                console.log("Nombre: ", alumno.nombre);
-                console.log("Apellido: ", alumno.apellido)
-                console.log("cedula: ", alumno.ci)
-                let sumatoria = 0
-                for (let i = 0; i < 4; i++) {
-                    sumatoria += Number(alumno.notas[i]);
-                    console.log("Nota ", i+1, ": ", alumno.notas[i])
-                }
-                console.log("Nota Final: ", sumatoria)
+                console.log(alumno.Informacion());
             }
             readline.keyInPause("Presione una tecla para continuar...")
             break;
         case '5':
             console.clear("----Eliminar alumno----");
             ci = prompt("Ingrese la cedula del alumno ")
-            let bAlumno = BD.buscarAlumno(ci)
-            if (!BD.existeAlumno(ci)) {
+            if (!BDEstudiantes.existeAlumno(ci)) {
                 readline.keyInPause("Alumno no existe!");
                 break;
             }
-            console.log("Seguro que desea eliminar el alumno ")
-            console.log("Nombre: ", bAlumno.nombre);
-            console.log("Apellido: ", bAlumno.apellido)
-            let eliminar = prompt();
+            let bAlumno = BDEstudiantes.buscarAlumno(ci)
+            console.log("Seguro que desea eliminar el alumno?")
+            console.log(bAlumno.Informacion());
+            let eliminar = prompt("Escriba 'y' para confirmar: ");
             if (eliminar == "y" || eliminar == "Y") {
-                BD.eliminarAlumno(ci)
+                BDEstudiantes.eliminarAlumno(ci)
                 console.log("Listo! ")
             }
             readline.keyInPause();
@@ -115,5 +101,4 @@ do {
 
 
     }while (opcion != 6)
-
-BD.cerrarBD();
+BDEstudiantes.guardar()

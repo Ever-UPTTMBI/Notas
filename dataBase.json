@@ -16,6 +16,17 @@
       "nombre": "francoc",
       "apellido": "jdjsjs",
       "notas": [
+        "10",
+        "20",
+        "20",
+        "3"
+      ]
+    },
+    {
+      "ci": "0987",
+      "nombre": "enyerver",
+      "apellido": "f",
+      "notas": [
         0,
         0,
         0,
